@@ -1,6 +1,5 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:absensi_kelas/core/constant/appcolor.dart';
+import 'package:absensi_kelas/core/constant/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'box_absen.dart';
 

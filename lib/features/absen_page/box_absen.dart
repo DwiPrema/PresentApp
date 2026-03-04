@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:absensi_kelas/core/constant/appcolor.dart';
+import 'package:absensi_kelas/core/constant/app_colors.dart';
 
 class BoxAbsen extends StatefulWidget {
   final String id;
@@ -143,7 +143,7 @@ class _BoxAbsenState extends State<BoxAbsen> {
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
+              color: Colors.grey.withAlpha(130),
               spreadRadius: 2,
               blurRadius: 5,
               offset: const Offset(0, 3),
