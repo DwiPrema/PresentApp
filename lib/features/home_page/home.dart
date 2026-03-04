@@ -1,6 +1,6 @@
+import 'package:absensi_kelas/features/absen_page/absen_page.dart';
 import 'package:flutter/material.dart';
 import '../../core/constant/app_colors.dart';
-import 'absensi.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'model.dart';
@@ -196,9 +196,7 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => AbsenScreen(
-                        kelas: kelas, // ✅ KIRIM parameter
-                      ),
+                      builder: (context) => const AbsenPage()
                     ),
                   );
                 },
@@ -215,9 +213,7 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => AbsenScreen(
-                        kelas: kelas, // ✅ KIRIM parameter
-                      ),
+                      builder: (context) => const AbsenPage()
                     ),
                   );
                 },
@@ -233,9 +229,7 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => AbsenScreen(
-                        kelas: kelas, // ✅ KIRIM parameter
-                      ),
+                      builder: (context) => const AbsenPage()
                     ),
                   );
                 },
