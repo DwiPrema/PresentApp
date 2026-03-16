@@ -8,7 +8,7 @@ import 'package:absensi_kelas/widgets/button.dart';
 import 'package:absensi_kelas/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/constant/app_colors.dart';
+import '../../../core/constant/app_colors.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -284,7 +284,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                           gradientcolor: gradientColor,
                           namakelas: schClass.schClassName,
                           jumlahsiswa: schClass.students.length.toString(),
-                          buttoncolor: AppColors.background.withAlpha(230),
+                          buttoncolor: AppColors.background,
                           onTapEdit: () =>
                               _showDialogData(schoolClass: schClass),
                           onTapRemove: () => _showDialogRemove(

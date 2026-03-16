@@ -13,8 +13,23 @@ class Student {
   @Index()
   late int rollNum;
 
-  String? photoPath;
+  String nis = "-";
+  String nisn = "-";
 
   @Index()
   final schClass = IsarLink<SchoolClass>();
+
+  Student copyWith({
+    String? name,
+    int? rollNum,
+    String? nis,
+    String? nisn,
+  }) {
+    return Student()
+      ..studentId = studentId
+      ..name = name ?? this.name
+      ..rollNum = rollNum ?? this.rollNum
+      ..nis = nis ?? this.nis
+      ..nisn = nisn ?? this.nisn;
+  }
 }

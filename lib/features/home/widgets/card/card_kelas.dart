@@ -50,68 +50,57 @@ class CardKelas extends StatelessWidget {
                   fontWeight: FontWeight.w700,
                   color: AppColors.black.withAlpha(200)),
               const SizedBox(width: 16),
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: onTapRemove,
-                    child: Icon(
-                      Icons.delete,
-                      size: 24,
-                      color: AppColors.black.withAlpha(200),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  GestureDetector(
-                    onTap: onTapEdit,
-                    child: Icon(
-                      Icons.edit_square,
-                      size: 24,
-                      color: AppColors.black.withAlpha(200),
-                    ),
-                  ),
-                ],
-              )
+              PopupMenuButton(
+                color: AppColors.background,
+                  icon: const Icon(Icons.more_vert),
+                  onSelected: (value) {
+                    if (value == "edit") {
+                      onTapEdit();
+                    } else if (value == "delete") {
+                      onTapRemove();
+                    }
+                  },
+                  itemBuilder: (context) => [
+                        PopupMenuItem(
+                          value: "edit",
+                          child: textPoppins("Edit",
+                              color: AppColors.black, fontSize: 12),
+                        ),
+                        PopupMenuItem(
+                          value: "delete",
+                          child: textPoppins("Hapus",
+                              color: AppColors.black, fontSize: 12),
+                        ),
+                      ]),
             ],
           ),
-
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(Icons.people_alt_rounded, size: 18, color: AppColors.black.withAlpha(180),),
-              const SizedBox(width: 8,),
+              Icon(
+                Icons.people_alt_rounded,
+                size: 18,
+                color: AppColors.black.withAlpha(180),
+              ),
+              const SizedBox(
+                width: 8,
+              ),
               textPoppins("$jumlahsiswa siswa",
-              fontSize: 12, color: Colors.black),
+                  fontSize: 12, color: Colors.black),
             ],
           ),
-
-          const SizedBox(height: 32),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Button(
-                  text: "Data Siswa",
-                  textColor: AppColors.black.withAlpha(200),
-                  bgColor: buttoncolor,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                  borderRadius: BorderRadius.circular(10),
-                  onPressed: () {}),
-              const SizedBox(
-                width: 24,
-              ),
-              Button(
-                  text: "Mulai Absensi",
-                  textColor: AppColors.black.withAlpha(200),
-                  bgColor: buttoncolor,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                  borderRadius: BorderRadius.circular(10),
-                  onPressed: onTapAbsen),
-            ],
-          )
+          const SizedBox(height: 16),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Button(
+                    text: "Mulai Absensi",
+                    textColor: AppColors.black.withAlpha(230),
+                    bgColor: buttoncolor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    borderRadius: BorderRadius.circular(10),
+                    onPressed: onTapAbsen),
+          ),
         ],
       ),
     );

@@ -1,7 +1,7 @@
 import 'package:absensi_kelas/core/constant/app_colors.dart';
 import 'package:absensi_kelas/core/database/global_service.dart';
 import 'package:flutter/material.dart';
-import 'package:absensi_kelas/features/home/home.dart';
+import 'package:absensi_kelas/features/home/ui/home.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
