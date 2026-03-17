@@ -5,7 +5,7 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:absensi_kelas/features/home/home.dart';
+import 'package:absensi_kelas/features/home/ui/home.dart';
 import 'package:flutter/material.dart';
 
 void main() {

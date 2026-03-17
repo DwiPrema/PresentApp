@@ -22,13 +22,18 @@ const StudentSchema = CollectionSchema(
       name: r'name',
       type: IsarType.string,
     ),
-    r'photoPath': PropertySchema(
+    r'nis': PropertySchema(
       id: 1,
-      name: r'photoPath',
+      name: r'nis',
+      type: IsarType.string,
+    ),
+    r'nisn': PropertySchema(
+      id: 2,
+      name: r'nisn',
       type: IsarType.string,
     ),
     r'rollNum': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'rollNum',
       type: IsarType.long,
     )
@@ -88,12 +93,8 @@ int _studentEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.name.length * 3;
-  {
-    final value = object.photoPath;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
+  bytesCount += 3 + object.nis.length * 3;
+  bytesCount += 3 + object.nisn.length * 3;
   return bytesCount;
 }
 
@@ -104,8 +105,9 @@ void _studentSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.name);
-  writer.writeString(offsets[1], object.photoPath);
-  writer.writeLong(offsets[2], object.rollNum);
+  writer.writeString(offsets[1], object.nis);
+  writer.writeString(offsets[2], object.nisn);
+  writer.writeLong(offsets[3], object.rollNum);
 }
 
 Student _studentDeserialize(
@@ -116,8 +118,9 @@ Student _studentDeserialize(
 ) {
   final object = Student();
   object.name = reader.readString(offsets[0]);
-  object.photoPath = reader.readStringOrNull(offsets[1]);
-  object.rollNum = reader.readLong(offsets[2]);
+  object.nis = reader.readString(offsets[1]);
+  object.nisn = reader.readString(offsets[2]);
+  object.rollNum = reader.readLong(offsets[3]);
   object.studentId = id;
   return object;
 }
@@ -132,8 +135,10 @@ P _studentDeserializeProp<P>(
     case 0:
       return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 2:
+      return (reader.readString(offset)) as P;
+    case 3:
       return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -606,75 +611,59 @@ extension StudentQueryFilter
     });
   }
 
-  QueryBuilder<Student, Student, QAfterFilterCondition> photoPathIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'photoPath',
-      ));
-    });
-  }
-
-  QueryBuilder<Student, Student, QAfterFilterCondition> photoPathIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'photoPath',
-      ));
-    });
-  }
-
-  QueryBuilder<Student, Student, QAfterFilterCondition> photoPathEqualTo(
-    String? value, {
+  QueryBuilder<Student, Student, QAfterFilterCondition> nisEqualTo(
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'photoPath',
+        property: r'nis',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Student, Student, QAfterFilterCondition> photoPathGreaterThan(
-    String? value, {
+  QueryBuilder<Student, Student, QAfterFilterCondition> nisGreaterThan(
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'photoPath',
+        property: r'nis',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Student, Student, QAfterFilterCondition> photoPathLessThan(
-    String? value, {
+  QueryBuilder<Student, Student, QAfterFilterCondition> nisLessThan(
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'photoPath',
+        property: r'nis',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Student, Student, QAfterFilterCondition> photoPathBetween(
-    String? lower,
-    String? upper, {
+  QueryBuilder<Student, Student, QAfterFilterCondition> nisBetween(
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'photoPath',
+        property: r'nis',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -684,69 +673,199 @@ extension StudentQueryFilter
     });
   }
 
-  QueryBuilder<Student, Student, QAfterFilterCondition> photoPathStartsWith(
+  QueryBuilder<Student, Student, QAfterFilterCondition> nisStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'photoPath',
+        property: r'nis',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Student, Student, QAfterFilterCondition> photoPathEndsWith(
+  QueryBuilder<Student, Student, QAfterFilterCondition> nisEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'photoPath',
+        property: r'nis',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Student, Student, QAfterFilterCondition> photoPathContains(
+  QueryBuilder<Student, Student, QAfterFilterCondition> nisContains(
       String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'photoPath',
+        property: r'nis',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Student, Student, QAfterFilterCondition> photoPathMatches(
+  QueryBuilder<Student, Student, QAfterFilterCondition> nisMatches(
       String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'photoPath',
+        property: r'nis',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Student, Student, QAfterFilterCondition> photoPathIsEmpty() {
+  QueryBuilder<Student, Student, QAfterFilterCondition> nisIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'photoPath',
+        property: r'nis',
         value: '',
       ));
     });
   }
 
-  QueryBuilder<Student, Student, QAfterFilterCondition> photoPathIsNotEmpty() {
+  QueryBuilder<Student, Student, QAfterFilterCondition> nisIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'photoPath',
+        property: r'nis',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Student, Student, QAfterFilterCondition> nisnEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'nisn',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Student, Student, QAfterFilterCondition> nisnGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'nisn',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Student, Student, QAfterFilterCondition> nisnLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'nisn',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Student, Student, QAfterFilterCondition> nisnBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'nisn',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Student, Student, QAfterFilterCondition> nisnStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'nisn',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Student, Student, QAfterFilterCondition> nisnEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'nisn',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Student, Student, QAfterFilterCondition> nisnContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'nisn',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Student, Student, QAfterFilterCondition> nisnMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'nisn',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Student, Student, QAfterFilterCondition> nisnIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'nisn',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Student, Student, QAfterFilterCondition> nisnIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'nisn',
         value: '',
       ));
     });
@@ -891,15 +1010,27 @@ extension StudentQuerySortBy on QueryBuilder<Student, Student, QSortBy> {
     });
   }
 
-  QueryBuilder<Student, Student, QAfterSortBy> sortByPhotoPath() {
+  QueryBuilder<Student, Student, QAfterSortBy> sortByNis() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'photoPath', Sort.asc);
+      return query.addSortBy(r'nis', Sort.asc);
     });
   }
 
-  QueryBuilder<Student, Student, QAfterSortBy> sortByPhotoPathDesc() {
+  QueryBuilder<Student, Student, QAfterSortBy> sortByNisDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'photoPath', Sort.desc);
+      return query.addSortBy(r'nis', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Student, Student, QAfterSortBy> sortByNisn() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'nisn', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Student, Student, QAfterSortBy> sortByNisnDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'nisn', Sort.desc);
     });
   }
 
@@ -930,15 +1061,27 @@ extension StudentQuerySortThenBy
     });
   }
 
-  QueryBuilder<Student, Student, QAfterSortBy> thenByPhotoPath() {
+  QueryBuilder<Student, Student, QAfterSortBy> thenByNis() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'photoPath', Sort.asc);
+      return query.addSortBy(r'nis', Sort.asc);
     });
   }
 
-  QueryBuilder<Student, Student, QAfterSortBy> thenByPhotoPathDesc() {
+  QueryBuilder<Student, Student, QAfterSortBy> thenByNisDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'photoPath', Sort.desc);
+      return query.addSortBy(r'nis', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Student, Student, QAfterSortBy> thenByNisn() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'nisn', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Student, Student, QAfterSortBy> thenByNisnDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'nisn', Sort.desc);
     });
   }
 
@@ -976,10 +1119,17 @@ extension StudentQueryWhereDistinct
     });
   }
 
-  QueryBuilder<Student, Student, QDistinct> distinctByPhotoPath(
+  QueryBuilder<Student, Student, QDistinct> distinctByNis(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'photoPath', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'nis', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Student, Student, QDistinct> distinctByNisn(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'nisn', caseSensitive: caseSensitive);
     });
   }
 
@@ -1004,9 +1154,15 @@ extension StudentQueryProperty
     });
   }
 
-  QueryBuilder<Student, String?, QQueryOperations> photoPathProperty() {
+  QueryBuilder<Student, String, QQueryOperations> nisProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'photoPath');
+      return query.addPropertyName(r'nis');
+    });
+  }
+
+  QueryBuilder<Student, String, QQueryOperations> nisnProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'nisn');
     });
   }
 

@@ -1,3 +1,4 @@
+import 'package:absensi_kelas/core/enums/enum.dart';
 import 'package:absensi_kelas/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,7 +9,7 @@ class BoxAbsen extends StatefulWidget {
   final String profile;
   final String nama;
   final String no;
-  final String status;
+  final StatusKehadiran status;
   final Function(String)? onStatusChanged; // Callback untuk perubahan status
   final VoidCallback? onTap; // Callback untuk tap pada box absen
 
@@ -18,7 +19,7 @@ class BoxAbsen extends StatefulWidget {
     required this.profile,
     required this.nama,
     required this.no,
-    required this.status,
+    this.status = StatusKehadiran.hadir,
     this.onStatusChanged,
     this.onTap,
   });
@@ -40,8 +41,7 @@ class _BoxAbsenState extends State<BoxAbsen> {
   @override
   void initState() {
     super.initState();
-    _currentStatus =
-        widget.status; // Inisialisasi status dengan nilai dari widget
+    _currentStatus = widget.status.toString(); // Inisialisasi status dengan nilai dari widget
   }
 
   void _changeStatus(String newStatus) {
@@ -125,7 +125,7 @@ class _BoxAbsenState extends State<BoxAbsen> {
       case 'Alpha':
         return AppColors.redAlpha;
       default:
-        return Colors.grey; // Warna default jika status tidak dikenali
+        return Colors.grey;
     }
   }
 
