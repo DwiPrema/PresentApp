@@ -35,7 +35,7 @@ const StudentSchema = CollectionSchema(
     r'rollNum': PropertySchema(
       id: 3,
       name: r'rollNum',
-      type: IsarType.long,
+      type: IsarType.string,
     )
   },
   estimateSize: _studentEstimateSize,
@@ -65,8 +65,8 @@ const StudentSchema = CollectionSchema(
       properties: [
         IndexPropertySchema(
           name: r'rollNum',
-          type: IndexType.value,
-          caseSensitive: false,
+          type: IndexType.hash,
+          caseSensitive: true,
         )
       ],
     )
@@ -95,6 +95,7 @@ int _studentEstimateSize(
   bytesCount += 3 + object.name.length * 3;
   bytesCount += 3 + object.nis.length * 3;
   bytesCount += 3 + object.nisn.length * 3;
+  bytesCount += 3 + object.rollNum.length * 3;
   return bytesCount;
 }
 
@@ -107,7 +108,7 @@ void _studentSerialize(
   writer.writeString(offsets[0], object.name);
   writer.writeString(offsets[1], object.nis);
   writer.writeString(offsets[2], object.nisn);
-  writer.writeLong(offsets[3], object.rollNum);
+  writer.writeString(offsets[3], object.rollNum);
 }
 
 Student _studentDeserialize(
@@ -120,7 +121,7 @@ Student _studentDeserialize(
   object.name = reader.readString(offsets[0]);
   object.nis = reader.readString(offsets[1]);
   object.nisn = reader.readString(offsets[2]);
-  object.rollNum = reader.readLong(offsets[3]);
+  object.rollNum = reader.readString(offsets[3]);
   object.studentId = id;
   return object;
 }
@@ -139,7 +140,7 @@ P _studentDeserializeProp<P>(
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
-      return (reader.readLong(offset)) as P;
+      return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -170,14 +171,6 @@ extension StudentQueryWhereSort on QueryBuilder<Student, Student, QWhere> {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         const IndexWhereClause.any(indexName: r'name'),
-      );
-    });
-  }
-
-  QueryBuilder<Student, Student, QAfterWhere> anyRollNum() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        const IndexWhereClause.any(indexName: r'rollNum'),
       );
     });
   }
@@ -389,7 +382,7 @@ extension StudentQueryWhere on QueryBuilder<Student, Student, QWhereClause> {
   }
 
   QueryBuilder<Student, Student, QAfterWhereClause> rollNumEqualTo(
-      int rollNum) {
+      String rollNum) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
         indexName: r'rollNum',
@@ -399,7 +392,7 @@ extension StudentQueryWhere on QueryBuilder<Student, Student, QWhereClause> {
   }
 
   QueryBuilder<Student, Student, QAfterWhereClause> rollNumNotEqualTo(
-      int rollNum) {
+      String rollNum) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -430,51 +423,6 @@ extension StudentQueryWhere on QueryBuilder<Student, Student, QWhereClause> {
               includeUpper: false,
             ));
       }
-    });
-  }
-
-  QueryBuilder<Student, Student, QAfterWhereClause> rollNumGreaterThan(
-    int rollNum, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'rollNum',
-        lower: [rollNum],
-        includeLower: include,
-        upper: [],
-      ));
-    });
-  }
-
-  QueryBuilder<Student, Student, QAfterWhereClause> rollNumLessThan(
-    int rollNum, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'rollNum',
-        lower: [],
-        upper: [rollNum],
-        includeUpper: include,
-      ));
-    });
-  }
-
-  QueryBuilder<Student, Student, QAfterWhereClause> rollNumBetween(
-    int lowerRollNum,
-    int upperRollNum, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'rollNum',
-        lower: [lowerRollNum],
-        includeLower: includeLower,
-        upper: [upperRollNum],
-        includeUpper: includeUpper,
-      ));
     });
   }
 }
@@ -872,46 +820,54 @@ extension StudentQueryFilter
   }
 
   QueryBuilder<Student, Student, QAfterFilterCondition> rollNumEqualTo(
-      int value) {
+    String value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'rollNum',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<Student, Student, QAfterFilterCondition> rollNumGreaterThan(
-    int value, {
+    String value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'rollNum',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<Student, Student, QAfterFilterCondition> rollNumLessThan(
-    int value, {
+    String value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'rollNum',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<Student, Student, QAfterFilterCondition> rollNumBetween(
-    int lower,
-    int upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -920,6 +876,75 @@ extension StudentQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Student, Student, QAfterFilterCondition> rollNumStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'rollNum',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Student, Student, QAfterFilterCondition> rollNumEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'rollNum',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Student, Student, QAfterFilterCondition> rollNumContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'rollNum',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Student, Student, QAfterFilterCondition> rollNumMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'rollNum',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Student, Student, QAfterFilterCondition> rollNumIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'rollNum',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Student, Student, QAfterFilterCondition> rollNumIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'rollNum',
+        value: '',
       ));
     });
   }
@@ -1133,9 +1158,10 @@ extension StudentQueryWhereDistinct
     });
   }
 
-  QueryBuilder<Student, Student, QDistinct> distinctByRollNum() {
+  QueryBuilder<Student, Student, QDistinct> distinctByRollNum(
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'rollNum');
+      return query.addDistinctBy(r'rollNum', caseSensitive: caseSensitive);
     });
   }
 }
@@ -1166,7 +1192,7 @@ extension StudentQueryProperty
     });
   }
 
-  QueryBuilder<Student, int, QQueryOperations> rollNumProperty() {
+  QueryBuilder<Student, String, QQueryOperations> rollNumProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'rollNum');
     });

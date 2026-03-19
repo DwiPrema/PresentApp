@@ -2,15 +2,19 @@ import 'package:absensi_kelas/features/students/models/student_model.dart';
 import 'package:absensi_kelas/features/students/services/student_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final schClassProvider =
-    AsyncNotifierProvider<StudentNotifier, List<Student>>(StudentNotifier.new);
+final studentProviders =
+    AsyncNotifierProvider.family<StudentNotifier, List<Student>, int>(
+        StudentNotifier.new);
 
-class StudentNotifier extends AsyncNotifier<List<Student>> {
+class StudentNotifier extends FamilyAsyncNotifier<List<Student>, int> {
   final service = StudentService();
 
+  late int classId;
+
   @override
-  Future<List<Student>> build() async {
-    return service.getAllStudentData();
+  Future<List<Student>> build(int arg) async {
+    classId = arg;
+    return service.getStudentByClass(classId);
   }
 
   Future<void> createData(Student student) async {
@@ -18,7 +22,7 @@ class StudentNotifier extends AsyncNotifier<List<Student>> {
 
     state = await AsyncValue.guard(() async {
       await service.createStudentData(student);
-      return service.getAllStudentData();
+      return service.getStudentByClass(classId);
     });
   }
 
@@ -27,7 +31,7 @@ class StudentNotifier extends AsyncNotifier<List<Student>> {
 
     state = await AsyncValue.guard(() async {
       await service.deleteStudentData(id);
-      return service.getAllStudentData();
+      return service.getStudentByClass(classId);
     });
   }
 
@@ -36,7 +40,7 @@ class StudentNotifier extends AsyncNotifier<List<Student>> {
 
     state = await AsyncValue.guard(() async {
       await service.updateStudentData(student);
-      return service.getAllStudentData();
+      return service.getStudentByClass(classId);
     });
   }
 }

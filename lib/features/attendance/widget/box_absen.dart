@@ -5,20 +5,20 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:absensi_kelas/core/constant/app_colors.dart';
 
 class BoxAbsen extends StatefulWidget {
-  final String id;
-  final String profile;
   final String nama;
   final String no;
+  final String? nis;
+  final String? nisn;
   final StatusKehadiran status;
-  final Function(String)? onStatusChanged; // Callback untuk perubahan status
-  final VoidCallback? onTap; // Callback untuk tap pada box absen
+  final Function(StatusKehadiran)? onStatusChanged;
+  final VoidCallback? onTap;
 
   const BoxAbsen({
     super.key,
-    required this.id,
-    required this.profile,
     required this.nama,
     required this.no,
+    this.nis,
+    this.nisn,
     this.status = StatusKehadiran.hadir,
     this.onStatusChanged,
     this.onTap,
@@ -29,46 +29,43 @@ class BoxAbsen extends StatefulWidget {
 }
 
 class _BoxAbsenState extends State<BoxAbsen> {
-  late String _currentStatus; // menyimpan status secara lokal
+  late StatusKehadiran _currentStatus;
 
-  final List<Map<String, dynamic>> _statusOptions = [
-    {'label': 'Hadir', 'color': AppColors.greenHadir},
-    {'label': 'Sakit', 'color': AppColors.yellow},
-    {'label': 'Izin', 'color': AppColors.blueIzin},
-    {'label': 'Alpha', 'color': AppColors.redAlpha},
+  final List<StatusKehadiran> _statusOptions = [
+    StatusKehadiran.hadir,
+    StatusKehadiran.sakit,
+    StatusKehadiran.izin,
+    StatusKehadiran.alpha,
   ];
 
   @override
   void initState() {
     super.initState();
-    _currentStatus = widget.status.toString(); // Inisialisasi status dengan nilai dari widget
+    _currentStatus = widget.status;
   }
 
-  void _changeStatus(String newStatus) {
+  void _changeStatus(StatusKehadiran newStatus) {
     setState(() {
-      _currentStatus = newStatus; // update status lokal
+      _currentStatus = newStatus;
     });
-    // Panggil callback untuk memberi tahu parent widget tentang perubahan status
-    if (widget.onStatusChanged != null) {
-      widget.onStatusChanged!(newStatus);
-    }
+
+    widget.onStatusChanged?.call(newStatus);
   }
 
-  // Fungsi untuk menampilkan AlertDialog
   void _showStatusDialog() {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (context) {
         return AlertDialog(
           title: textPoppins(
             "Pilih Status Absen",
             fontSize: 18,
             fontWeight: FontWeight.w600,
-            color: AppColors.black
+            color: AppColors.black,
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
-            children: _statusOptions.map((option) {
+            children: _statusOptions.map((status) {
               return Container(
                 margin: const EdgeInsets.symmetric(vertical: 4),
                 child: ListTile(
@@ -77,18 +74,18 @@ class _BoxAbsenState extends State<BoxAbsen> {
                     height: 20,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: option['color'],
+                      color: _getStatusColor(status),
                     ),
                   ),
                   title: textPoppins(
-                    option["label"],
+                    _getStatusLabel(status),
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
-                    color: AppColors.black
+                    color: AppColors.black,
                   ),
                   onTap: () {
-                    Navigator.pop(context); // Tutup dialog
-                    _changeStatus(option['label']); // Ubah status
+                    Navigator.pop(context);
+                    _changeStatus(status);
                   },
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -99,9 +96,7 @@ class _BoxAbsenState extends State<BoxAbsen> {
           ),
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.pop(context); // Tutup dialog
-              },
+              onPressed: () => Navigator.pop(context),
               child: textPoppins(
                 "Batal",
                 color: AppColors.black.withAlpha(190),
@@ -113,19 +108,29 @@ class _BoxAbsenState extends State<BoxAbsen> {
     );
   }
 
-  // Fungsi untuk mendapatkan warna berdasarkan status
-  Color _getStatusColor(String status) {
+  String _getStatusLabel(StatusKehadiran status) {
     switch (status) {
-      case 'Hadir':
+      case StatusKehadiran.hadir:
+        return "Hadir";
+      case StatusKehadiran.sakit:
+        return "Sakit";
+      case StatusKehadiran.izin:
+        return "Izin";
+      case StatusKehadiran.alpha:
+        return "Alpha";
+    }
+  }
+
+  Color _getStatusColor(StatusKehadiran status) {
+    switch (status) {
+      case StatusKehadiran.hadir:
         return AppColors.greenHadir;
-      case 'Sakit':
+      case StatusKehadiran.sakit:
         return AppColors.yellow;
-      case 'Izin':
+      case StatusKehadiran.izin:
         return AppColors.blueIzin;
-      case 'Alpha':
+      case StatusKehadiran.alpha:
         return AppColors.redAlpha;
-      default:
-        return Colors.grey;
     }
   }
 
@@ -151,24 +156,6 @@ class _BoxAbsenState extends State<BoxAbsen> {
         ),
         child: Stack(
           children: [
-            // Konten utama BoxAbsen
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 66,
-                  height: 66,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(width: 2),
-                  ),
-                  child: ClipOval(
-                    child: Image.asset(widget.profile, fit: BoxFit.cover),
-                  ),
-                ),
-                const SizedBox(width: 15, height: 50),
-              ],
-            ),
             Positioned(
               top: 8,
               left: 80,
@@ -207,8 +194,7 @@ class _BoxAbsenState extends State<BoxAbsen> {
               bottom: 2,
               right: 2,
               child: GestureDetector(
-                onTap:
-                    _showStatusDialog, // Panggil fungsi untuk menampilkan dialog
+                onTap: _showStatusDialog,
                 child: Container(
                   width: 122,
                   height: 35,
@@ -218,7 +204,7 @@ class _BoxAbsenState extends State<BoxAbsen> {
                   ),
                   child: Center(
                     child: textPagratiNarrow(
-                      _currentStatus,
+                      _getStatusLabel(_currentStatus),
                       fontSize: 16,
                       color: AppColors.white,
                       fontWeight: FontWeight.w700,

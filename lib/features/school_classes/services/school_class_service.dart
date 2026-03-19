@@ -17,7 +17,7 @@ class SchoolClassService {
     final classes = await DatabaseService.isarDb.schoolClass.where().findAll();
 
     for (var c in classes) {
-      c.students.load();
+      await c.students.load();
     }
 
     return classes;

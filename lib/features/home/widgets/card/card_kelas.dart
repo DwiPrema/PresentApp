@@ -1,4 +1,6 @@
 import 'package:absensi_kelas/core/constant/app_colors.dart';
+import 'package:absensi_kelas/features/school_classes/models/school_class_model.dart';
+import 'package:absensi_kelas/features/students/ui/student_page.dart';
 import 'package:absensi_kelas/widgets/button.dart';
 import 'package:absensi_kelas/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +8,7 @@ import 'package:flutter/material.dart';
 class CardKelas extends StatelessWidget {
   final Color maincolor;
   final Color gradientcolor;
-  final String namakelas;
+  final SchoolClass schoolClass;
   final String jumlahsiswa;
   final Color buttoncolor;
   final VoidCallback onTapEdit;
@@ -17,7 +19,7 @@ class CardKelas extends StatelessWidget {
     super.key,
     required this.maincolor,
     required this.gradientcolor,
-    required this.namakelas,
+    required this.schoolClass,
     required this.jumlahsiswa,
     required this.buttoncolor,
     required this.onTapEdit,
@@ -45,19 +47,24 @@ class CardKelas extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              textPagratiNarrow(namakelas,
+              textPagratiNarrow(schoolClass.schClassName,
                   fontSize: 30,
                   fontWeight: FontWeight.w700,
                   color: AppColors.black.withAlpha(200)),
               const SizedBox(width: 16),
               PopupMenuButton(
-                color: AppColors.background,
+                  color: AppColors.background,
                   icon: const Icon(Icons.more_vert),
                   onSelected: (value) {
                     if (value == "edit") {
                       onTapEdit();
                     } else if (value == "delete") {
                       onTapRemove();
+                    } else if (value == "kelola data siswa") {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => StudentPage(mainColor: maincolor, schoolClass: schoolClass,)));
                     }
                   },
                   itemBuilder: (context) => [
@@ -71,6 +78,11 @@ class CardKelas extends StatelessWidget {
                           child: textPoppins("Hapus",
                               color: AppColors.black, fontSize: 12),
                         ),
+                        PopupMenuItem(
+                          value: "kelola data siswa",
+                          child: textPoppins("Kelola Data Siswa",
+                              color: AppColors.black, fontSize: 12),
+                        )
                       ]),
             ],
           ),
@@ -93,13 +105,13 @@ class CardKelas extends StatelessWidget {
           Align(
             alignment: Alignment.centerRight,
             child: Button(
-                    text: "Mulai Absensi",
-                    textColor: AppColors.black.withAlpha(230),
-                    bgColor: buttoncolor,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    borderRadius: BorderRadius.circular(10),
-                    onPressed: onTapAbsen),
+                text: "Mulai Absensi",
+                textColor: AppColors.black.withAlpha(230),
+                bgColor: buttoncolor,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                borderRadius: BorderRadius.circular(10),
+                onPressed: onTapAbsen),
           ),
         ],
       ),
