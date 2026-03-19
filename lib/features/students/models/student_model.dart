@@ -11,7 +11,7 @@ class Student {
   late String name;
 
   @Index()
-  late int rollNum;
+  late String rollNum;
 
   String nis = "-";
   String nisn = "-";
@@ -21,7 +21,7 @@ class Student {
 
   Student copyWith({
     String? name,
-    int? rollNum,
+    String? rollNum,
     String? nis,
     String? nisn,
   }) {

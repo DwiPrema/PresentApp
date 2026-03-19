@@ -1,182 +1,226 @@
+import 'package:absensi_kelas/features/attendance/widget/box_absen.dart';
+import 'package:absensi_kelas/features/students/providers/student_provider.dart';
 import 'package:absensi_kelas/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:absensi_kelas/core/constant/app_colors.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
-// 1. Kelas Utama: StatelessWidget (immutable)
 class AbsenPage extends ConsumerStatefulWidget {
-  const AbsenPage({super.key});
+  final Color headerColor;
+  final Color gradientHeaderColor;
+  final int schoolClassId;
+
+  const AbsenPage({
+    super.key,
+    required this.headerColor,
+    required this.gradientHeaderColor,
+    required this.schoolClassId,
+  });
 
   @override
   ConsumerState<AbsenPage> createState() => _AbsenPageState();
 }
 
-// 2. Kelas State: Tempat menampung data & logika (mutable)
 class _AbsenPageState extends ConsumerState<AbsenPage> {
-
-  // Tempat menampung variabel status/state
   late DateTime now;
-  String? selectedId; //♦️
 
   @override
   void initState() {
     super.initState();
     now = DateTime.now();
-    _updateTime(); // Panggil fungsi untuk memperbarui waktu setiap detik
+    _updateTime();
   }
 
-  //hybrid biar nantik kalok di pakek sampek pergantian hari tu dia bisa berubah tanpa perlu di reload
   void _updateTime() {
     Future.delayed(const Duration(seconds: 1), () {
+      if (!mounted) return;
       setState(() {
-        now = DateTime.now(); // Perbarui waktu
+        now = DateTime.now();
       });
-      _updateTime(); // Panggil lagi untuk terus memperbarui
+      _updateTime();
     });
-  }
-
-  String _getMonthName(int month) {
-    //♦️
-    const List<String> months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'Mei',
-      'Jun',
-      'Jul',
-      'Agu',
-      'Sep',
-      'Okt',
-      'Nov',
-      'Des',
-    ];
-    return months[month - 1];
   }
 
   @override
   Widget build(BuildContext context) {
-    String day = now.day.toString().padLeft(
-      2,
-      '0',
-    ); //♦️ jd dia bakal terus ke reload setiap kita jalanin
+    final studentState = ref.watch(studentProviders(widget.schoolClassId));
+
+    final String day = DateFormat('dd').format(now);
+    final String date = DateFormat('dd MMM').format(now);
+
+    final students = studentState.value ?? [];
+    final totalStudents = students.length;
+
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                bottom: 100,
-              ), // Memberi ruang untuk tombol
-
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      Container(
-                        width: double.infinity,
-                        height: 150,
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [AppColors.bgBlue, AppColors.gradientBgBlue],
-                            begin: FractionalOffset(
-                              0.4,
-                              0.1,
-                            ), // 0.0 = kiri/atas, 1.0 = kanan/bawah
-                            end: FractionalOffset(
-                              0.8,
-                              2.0,
-                            ), // Nilai di luar 0.0-1.0 akan memperpanjang gradien
-                          ),
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(20),
-                            bottomRight: Radius.circular(20),
-                          ),
-                        ),
-
-                        child: Center(
-                          child: textPoppins("Kelas 11 RPL", fontSize: 18, fontWeight: FontWeight.w400, color: AppColors.white),
-                        ),
-                      ),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 100,
-                            height: 80,
-                            margin: const EdgeInsets.only(top: 110),
-                            decoration: BoxDecoration(
-                              color: AppColors.yellow,
-                              borderRadius: BorderRadius.circular(15),
+      body: SizedBox.expand(
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 100),
+                child: Column(
+                  children: [
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          height: 150,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                widget.headerColor,
+                                widget.gradientHeaderColor,
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
                             ),
-                            child: Center(
+                            borderRadius: const BorderRadius.only(
+                              bottomLeft: Radius.circular(20),
+                              bottomRight: Radius.circular(20),
+                            ),
+                          ),
+                          child: Center(
+                            child: textPoppins(
+                              "Kelas 11 RPL",
+                              fontSize: 18,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.white,
+                            ),
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 100,
+                              height: 80,
+                              margin: const EdgeInsets.only(top: 110),
+                              decoration: BoxDecoration(
+                                color: AppColors.yellow,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  textPagratiNarrow("Jumlah", fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.white),
-                                  textPagratiNarrow("17", color: AppColors.white, fontSize: 32, fontWeight: FontWeight.w700),
+                                  textPagratiNarrow(
+                                    "Jumlah",
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.white,
+                                  ),
+                                  textPagratiNarrow(
+                                    "$totalStudents",
+                                    color: AppColors.white,
+                                    fontSize: 32,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ],
                               ),
                             ),
-                          ),
-
-                          const SizedBox(width: 10),
-
-                          Container(
-                            width: 100,
-                            height: 80,
-                            margin: const EdgeInsets.only(top: 110),
-                            decoration: BoxDecoration(
-                              color: AppColors.yellow,
-                              borderRadius: BorderRadius.circular(15),
+                            const SizedBox(width: 10),
+                            Container(
+                              width: 100,
+                              height: 80,
+                              margin: const EdgeInsets.only(top: 110),
+                              decoration: BoxDecoration(
+                                color: AppColors.yellow,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  textPagratiNarrow(
+                                    day,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.white,
+                                  ),
+                                  textPagratiNarrow(
+                                    date,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.white,
+                                  ),
+                                ],
+                              ),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                textPagratiNarrow(day, fontSize: 32, fontWeight: FontWeight.w700,color: AppColors.white),
-                                const SizedBox(width: 10),
-                                textPagratiNarrow('${_getMonthName(now.month)}\n${now.year}', fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.white),
-                              ],
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 50),
+
+                    /// LIST SISWA
+                    studentState.when(
+                      data: (studentList) {
+                        if (studentList.isEmpty) {
+                          return Center(
+                            child: textPoppins(
+                              "Belum ada data siswa",
+                              color: AppColors.black,
                             ),
-                          ),
-                        ],
+                          );
+                        }
+
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: studentList.length,
+                          itemBuilder: (context, index) {
+                            final student = studentList[index];
+
+                            return BoxAbsen(
+                              nama: student.name,
+                              no: student.rollNum.toString(),
+                              nis: student.nis,
+                              nisn: student.nisn,
+                            );
+                          },
+                        );
+                      },
+                      error: (error, stack) => Center(
+                        child: textPoppins("Terjadi kesalahan: $error"),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-
-                  //buat untuk list
-                ],
-              ),
-            ),
-          ),
-
-          Positioned(
-            bottom: 24,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 80,
-                    vertical: 20,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  backgroundColor: AppColors.button,
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator()),
+                    ),
+                  ],
                 ),
-                onPressed: () {},
-                child: textPoppins("Kirim", fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.background)
               ),
             ),
-          ),
-        ],
+
+            /// BUTTON
+            Positioned(
+              bottom: 24,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 80,
+                      vertical: 20,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    backgroundColor: widget.headerColor,
+                  ),
+                  onPressed: () {},
+                  child: textPoppins(
+                    "Kirim",
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.background,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

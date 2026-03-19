@@ -4,7 +4,9 @@ import 'package:absensi_kelas/features/home/widgets/calendar/calender.dart';
 import 'package:absensi_kelas/features/home/widgets/card/card_kelas.dart';
 import 'package:absensi_kelas/features/school_classes/models/school_class_model.dart';
 import 'package:absensi_kelas/features/school_classes/providers/school_classes_provider.dart';
+import 'package:absensi_kelas/features/students/providers/student_provider.dart';
 import 'package:absensi_kelas/widgets/button.dart';
+import 'package:absensi_kelas/widgets/text_field_widget.dart';
 import 'package:absensi_kelas/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -65,7 +67,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     return DayType.today;
   }
 
-  void _showDialogRemove({required int id, required SchoolClass schClass}) {
+  void _showDialogRemove({required int id, required SchoolClass schClass, required String jumlahSiswa}) {
     showDialog(
       context: context,
       builder: (context) {
@@ -81,13 +83,15 @@ class _HomePageState extends ConsumerState<HomePage> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              textPoppins("Perhatian! : Menghapus kelas ini akan menghapus seluruh data siswa yang ada di dalamnya", color: AppColors.redAlpha.withAlpha(180), fontWeight: FontWeight.w700),
+              const SizedBox(height: 50,),
               textPoppins("Kelas : ${schClass.schClassName}",
-                  fontSize: 12, color: AppColors.black),
+                  fontSize: 14, color: AppColors.black),
               const SizedBox(
                 height: 16,
               ),
-              textPoppins("Jumlah Siswa : ${schClass.students.length}",
-                  fontSize: 12, color: AppColors.black),
+              textPoppins("Jumlah Siswa : $jumlahSiswa",
+                  fontSize: 14, color: AppColors.black),
             ],
           ),
           actions: [
@@ -102,7 +106,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   Navigator.pop(context);
                 }),
             Button(
-                text: "Remove",
+                text: "Hapus",
                 textColor: AppColors.white,
                 bgColor: AppColors.redAlpha.withAlpha(230),
                 fontSize: 12,
@@ -132,28 +136,8 @@ class _HomePageState extends ConsumerState<HomePage> {
           backgroundColor: AppColors.background,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          title: Text(schoolClass == null ? "Tambah Kelas" : "Edit Kelas"),
-          content: TextField(
-            controller: controller,
-            autofocus: true,
-            decoration: InputDecoration(
-              labelText: "Nama Kelas",
-              labelStyle: const TextStyle(color: AppColors.black),
-              border: const OutlineInputBorder(),
-              enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.grey,
-                  width: 1.5,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: AppColors.blueCard.withAlpha(100),
-                  width: 2,
-                ),
-              ),
-            ),
-          ),
+          title: Text(schoolClass == null ? "Tambah Data Kelas" : "Edit Data Kelas"),
+          content: textFieldWidget(labelText: "Nama Kelas", controller: controller, textFieldType: TextFieldType.outline),
           actions: [
             Button(
                 text: "Batal",
@@ -276,24 +260,33 @@ class _HomePageState extends ConsumerState<HomePage> {
                       itemBuilder: (context, index) {
                         final schClass = schClassList[index];
 
+                        final student =
+                            ref.watch(studentProviders(schClass.schoolClassId));
+                        final students = student.value ?? [];
+                        final totalStudent = students.length;
+
                         final mainColor = mainColors[index % mainColors.length];
                         final gradientColor =
                             gradientColors[index % gradientColors.length];
                         return CardKelas(
                           maincolor: mainColor,
                           gradientcolor: gradientColor,
-                          namakelas: schClass.schClassName,
-                          jumlahsiswa: schClass.students.length.toString(),
+                          schoolClass: schClass,
+                          jumlahsiswa: totalStudent.toString(),
                           buttoncolor: AppColors.background,
                           onTapEdit: () =>
                               _showDialogData(schoolClass: schClass),
                           onTapRemove: () => _showDialogRemove(
-                              id: schClass.schoolClassId, schClass: schClass),
+                              id: schClass.schoolClassId, schClass: schClass, jumlahSiswa: totalStudent.toString()),
                           onTapAbsen: () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const AbsenPage()));
+                                    builder: (context) => AbsenPage(
+                                          headerColor: mainColor,
+                                          gradientHeaderColor: gradientColor,
+                                          schoolClassId: schClass.schoolClassId,
+                                        )));
                           },
                         );
                       },
