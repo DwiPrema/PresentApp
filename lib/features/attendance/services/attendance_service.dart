@@ -76,14 +76,22 @@ class AttendanceService {
   }
 
   Future<Attendance?> getAttendanceByClassAndDate({
-  required int classId,
-  required DateTime date,
-}) async {
+    required int classId,
+    required DateTime date,
+  }) async {
+    return await DatabaseService.isarDb.attendances
+        .filter()
+        .classIdEqualTo(classId)
+        .dateTimeEqualTo(date)
+        .findFirst();
+  }
 
-  return await DatabaseService.isarDb.attendances
-      .filter()
-      .classIdEqualTo(classId)
-      .dateTimeEqualTo(date)
-      .findFirst();
-}
+  Future<List<Attendance>> getAttendanceByClass({
+    required int classId,
+  }) async {
+    return await DatabaseService.isarDb.attendances
+        .filter()
+        .classIdEqualTo(classId)
+        .findAll();
+  }
 }

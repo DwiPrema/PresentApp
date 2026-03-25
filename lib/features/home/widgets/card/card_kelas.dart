@@ -1,4 +1,5 @@
 import 'package:absensi_kelas/core/constant/app_colors.dart';
+import 'package:absensi_kelas/features/attendance/ui/attendance_history.dart';
 import 'package:absensi_kelas/features/school_classes/models/school_class_model.dart';
 import 'package:absensi_kelas/features/students/ui/student_page.dart';
 import 'package:absensi_kelas/widgets/button.dart';
@@ -64,7 +65,16 @@ class CardKelas extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => StudentPage(mainColor: maincolor, schoolClass: schoolClass,)));
+                              builder: (context) => StudentPage(
+                                    mainColor: maincolor,
+                                    schoolClass: schoolClass,
+                                  )));
+                    } else if (value == "attendance history") {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AttendanceHistoryPage(
+                                  className: schoolClass.schClassName, classId: schoolClass.schoolClassId, mainColor: maincolor, totalStudent: jumlahsiswa,)));
                     }
                   },
                   itemBuilder: (context) => [
@@ -81,6 +91,11 @@ class CardKelas extends StatelessWidget {
                         PopupMenuItem(
                           value: "kelola data siswa",
                           child: textPoppins("Kelola Data Siswa",
+                              color: AppColors.black, fontSize: 12),
+                        ),
+                        PopupMenuItem(
+                          value: "attendance history",
+                          child: textPoppins("Riwayat Absensi",
                               color: AppColors.black, fontSize: 12),
                         )
                       ]),
