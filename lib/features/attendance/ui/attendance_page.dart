@@ -68,7 +68,6 @@ class _AttendancePageState extends ConsumerState<AttendancePage> {
                 padding: const EdgeInsets.only(bottom: 100),
                 child: Column(
                   children: [
-                    /// HEADER
                     Stack(
                       clipBehavior: Clip.none,
                       children: [
@@ -98,8 +97,6 @@ class _AttendancePageState extends ConsumerState<AttendancePage> {
                             ),
                           ),
                         ),
-
-                        /// INFO BOX
                         studentState.when(
                           data: (studentList) {
                             final totalStudents = studentList.length;
@@ -120,8 +117,6 @@ class _AttendancePageState extends ConsumerState<AttendancePage> {
                         ),
                       ],
                     ),
-
-                    /// LIST SISWA
                     studentState.when(
                       data: (studentList) {
                         if (studentList.isEmpty) {
@@ -189,6 +184,26 @@ class _AttendancePageState extends ConsumerState<AttendancePage> {
                 ),
               ),
             ),
+            Positioned(
+              top: MediaQuery.of(context).padding.top,
+              left: 16,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    color: AppColors.black.withAlpha(50),
+                    child: const Icon(
+                      Icons.arrow_back,
+                      color: AppColors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
             studentState.when(
               data: (studentList) {
                 final totalStudents = studentList.length;
@@ -221,19 +236,20 @@ class _AttendancePageState extends ConsumerState<AttendancePage> {
 
                           if (!context.mounted) return;
 
-                          if (isExist) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text("Absensi hari ini sudah ada")),
-                            );
-                            return;
-                          }
-
                           final detail = uiState.entries.map((entry) {
                             return AttendanceDetail()
                               ..studentId = entry.key
                               ..status = entry.value;
                           }).toList();
+
+                          if (isExist) {
+                            _isExistAttendance(
+                                buildContext: context,
+                                schClassId: widget.schoolClassId,
+                                schClassName: widget.schoolClassName,
+                                totalStudent: detail.length.toString());
+                            return;
+                          }
 
                           final attendance = Attendance()
                             ..classId = widget.schoolClassId
@@ -244,8 +260,8 @@ class _AttendancePageState extends ConsumerState<AttendancePage> {
 
                           ref.read(attendanceUIProvider.notifier).reset();
 
-                          ref.invalidate(
-                              summaryProvider((widget.schoolClassId, dateNow)));
+                          ref.invalidate(summaryProvider);
+                          ref.invalidate(attendanceByClassAndDateProvider);
 
                           if (!context.mounted) return;
 
@@ -272,7 +288,6 @@ class _AttendancePageState extends ConsumerState<AttendancePage> {
     );
   }
 
-  /// TOP BOX (JUMLAH & TANGGAL)
   Widget _topBox(String title, String value, double heightHeader) {
     return Container(
       width: 100,
@@ -301,4 +316,69 @@ class _AttendancePageState extends ConsumerState<AttendancePage> {
       ),
     );
   }
+}
+
+void _isExistAttendance({
+  required BuildContext buildContext,
+  required int schClassId,
+  required String schClassName,
+  required String totalStudent,
+}) {
+  showDialog(
+    context: buildContext,
+    builder: (dialogContext) {
+      return AlertDialog(
+        backgroundColor: AppColors.background,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: textPoppins(
+          "Absensi hari ini sudah ada!",
+          color: AppColors.black,
+          fontWeight: FontWeight.w600,
+          fontSize: 16,
+        ),
+        content: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: textPoppins(
+            "Mohon untuk absen lagi besok,\nIngin lihat absensi hari ini?",
+            color: AppColors.black,
+          ),
+        ),
+        actions: [
+          Button(
+            text: "Batal",
+            textColor: AppColors.black,
+            bgColor: AppColors.background,
+            fontSize: 10,
+            fontWeight: FontWeight.w600,
+            borderRadius: BorderRadius.circular(10),
+            onPressed: () {
+              Navigator.pop(dialogContext);
+            },
+          ),
+          Button(
+            text: "Lihat Absen",
+            textColor: AppColors.white,
+            bgColor: AppColors.blueCard,
+            fontSize: 10,
+            fontWeight: FontWeight.w600,
+            borderRadius: BorderRadius.circular(10),
+            onPressed: () {
+              Navigator.pop(dialogContext);
+
+              Navigator.push(
+                buildContext, // ⬅️ ini penting!
+                MaterialPageRoute(
+                  builder: (_) => ResultAttendancePage(
+                    schoolClassId: schClassId,
+                    schoolClassName: schClassName,
+                    totalStudent: totalStudent,
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

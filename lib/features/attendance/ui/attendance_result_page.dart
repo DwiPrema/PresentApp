@@ -13,16 +13,20 @@ class ResultAttendancePage extends ConsumerWidget {
   final int schoolClassId;
   final String schoolClassName;
   final String totalStudent;
-  const ResultAttendancePage(
-      {super.key,
-      required this.schoolClassId,
-      required this.schoolClassName,
-      required this.totalStudent});
+  final DateTime? dateTime;
+
+  const ResultAttendancePage({
+    super.key,
+    required this.schoolClassId,
+    required this.schoolClassName,
+    required this.totalStudent,
+    this.dateTime,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    //date
-    final dateNow = DateHelper.todayOnly();
+    
+    final dateNow = dateTime ?? DateHelper.todayOnly();
     final locale = Localizations.localeOf(context).toString();
     final String day = DateFormat('EEEE', locale).format(dateNow);
     final String date = DateFormat('dd MMMM yyyy', locale).format(dateNow);
@@ -91,13 +95,25 @@ class ResultAttendancePage extends ConsumerWidget {
                         width: 16,
                       ),
 
-                      /// RIGHT SIDE
                       Expanded(
                         child: Column(
                           children: [
                             _infoBox("Kelas", schoolClassName),
                             const SizedBox(height: 10),
-                            _infoBox("Total", totalStudent),
+                            attendanceState.when(
+                                data: (attendance) {
+                                  final attendanceDetails =
+                                      attendance?.details ?? [];
+                                  final totalHadirHariIni =
+                                      attendanceDetails.length;
+
+                                  return _infoBox(
+                                      "Total", totalHadirHariIni.toString());
+                                },
+                                error: (e, s) => _infoBox("Jumlah Siswa", "0"),
+                                loading: () => const Center(
+                                      child: CircularProgressIndicator(),
+                                    )),
                           ],
                         ),
                       )
@@ -151,7 +167,6 @@ class ResultAttendancePage extends ConsumerWidget {
 
               const SizedBox(height: 16),
 
-              /// LIST SISWA
               attendanceState.when(
                 data: (attendance) {
                   final attendanceMap = {
@@ -161,12 +176,16 @@ class ResultAttendancePage extends ConsumerWidget {
 
                   return studentState.when(
                     data: (studentList) {
+                      final filteredStudent = studentList
+                          .where((e) => attendanceMap.containsKey(e.studentId))
+                          .toList();
+
                       return ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: studentList.length,
+                        itemCount: filteredStudent.length,
                         itemBuilder: (context, index) {
-                          final student = studentList[index];
+                          final student = filteredStudent[index];
 
                           final status = attendanceMap[student.studentId] ??
                               StatusKehadiran.alpha;
@@ -228,7 +247,6 @@ class ResultAttendancePage extends ConsumerWidget {
     );
   }
 
-  /// STATUS BOX
   static Widget _statusBox(String title, String value, Color color) {
     return Expanded(
       child: Container(

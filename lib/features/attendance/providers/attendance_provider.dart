@@ -55,6 +55,14 @@ final attendanceByClassAndDateProvider =
   (ref, param) async {
     final service = AttendanceService();
 
-    return service.getAttendanceByClassAndDate(classId: param.$1, date: param.$2);
+    return service.getAttendanceByClassAndDate(
+        classId: param.$1, date: param.$2);
   },
 );
+
+final attendanceByClassProvider =
+    FutureProvider.family<List<Attendance>, int>((ref, param) async {
+  final service = AttendanceService();
+  return service.getAttendanceByClass(classId: param);
+});
+
