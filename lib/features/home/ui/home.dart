@@ -1,6 +1,6 @@
 import 'package:absensi_kelas/core/enums/enum.dart';
+import 'package:absensi_kelas/core/routes/routes.dart';
 import 'package:absensi_kelas/core/utils/date_helper.dart';
-import 'package:absensi_kelas/features/attendance/ui/attendance_page.dart';
 import 'package:absensi_kelas/features/home/widgets/calendar/calender.dart';
 import 'package:absensi_kelas/features/home/widgets/card/card_kelas.dart';
 import 'package:absensi_kelas/features/school_classes/models/school_class_model.dart';
@@ -302,16 +302,17 @@ class _HomePageState extends ConsumerState<HomePage> {
                               schClass: schClass,
                               jumlahSiswa: totalStudent.toString()),
                           onTapAbsen: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AttendancePage(
-                                          headerColor: mainColor,
-                                          gradientHeaderColor: gradientColor,
-                                          schoolClassId: schClass.schoolClassId,
-                                          schoolClassName:
-                                              schClass.schClassName,
-                                        )));
+
+                            Navigator.pushNamed(
+                              context,
+                              AppRoutes.attendancePage,
+                              arguments: {
+                                "headerColor": mainColor,
+                                "gradientColor": gradientColor,
+                                "schoolClassId": schClass.schoolClassId,
+                                "schoolClassName": schClass.schClassName,
+                              },
+                            );
                           },
                         );
                       },

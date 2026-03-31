@@ -1,9 +1,8 @@
 import 'package:absensi_kelas/core/constant/app_colors.dart';
 import 'package:absensi_kelas/core/enums/enum.dart';
 import 'package:absensi_kelas/core/extensions/attendance_extension.dart';
+import 'package:absensi_kelas/core/routes/routes.dart';
 import 'package:absensi_kelas/features/attendance/providers/attendance_provider.dart';
-import 'package:absensi_kelas/features/attendance/ui/attendance_recap.dart';
-import 'package:absensi_kelas/features/attendance/ui/attendance_result_page.dart';
 import 'package:absensi_kelas/features/attendance/widget/card_recap.dart';
 import 'package:absensi_kelas/features/students/providers/student_provider.dart';
 import 'package:absensi_kelas/widgets/text_widget.dart';
@@ -139,33 +138,30 @@ class _AttendanceHistoryPageState extends ConsumerState<AttendanceHistoryPage> {
                             fontWeight: FontWeight.w700,
                             borderRadius: BorderRadius.circular(10),
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return recap.when(
-                                        data: (recap) {
-                                          return students.when(
-                                              data: (student) {
-                                                return MonthlyStudentRecap(
-                                                    recap: recap,
-                                                    students: student,
-                                                    className: widget.className,
-                                                    month: monthName,
-                                                    mainColor:
-                                                        widget.mainColor);
-                                              },
-                                              error: (e, s) => textPoppins(
-                                                  "Maaf Terjadi Kesalahan!"),
-                                              loading: () =>
-                                                  const SizedBox.shrink());
+                              recap.when(
+                                  data: (recap) {
+                                    return students.when(
+                                        data: (student) {
+                                          return Navigator.pushNamed(
+                                            context,
+                                            AppRoutes.attendanceRecapPage,
+                                            arguments: {
+                                              "recap": recap,
+                                              "students": student,
+                                              "schoolClassName":
+                                                  widget.className,
+                                              "month": monthName,
+                                              "mainColor": widget.mainColor
+                                            },
+                                          );
                                         },
                                         error: (e, s) => textPoppins(
                                             "Maaf Terjadi Kesalahan!"),
                                         loading: () => const SizedBox.shrink());
                                   },
-                                ),
-                              );
+                                  error: (e, s) =>
+                                      textPoppins("Maaf Terjadi Kesalahan!"),
+                                  loading: () => const SizedBox.shrink());
                             },
                           ),
                         ),
@@ -277,16 +273,15 @@ class _AttendanceHistoryPageState extends ConsumerState<AttendanceHistoryPage> {
                             sakit: sakit.toString(),
                             alpha: alpha.toString(),
                             navigateToDetail: () {
-                              Navigator.push(
+                              Navigator.pushNamed(
                                 context,
-                                MaterialPageRoute(
-                                  builder: (context) => ResultAttendancePage(
-                                    schoolClassId: widget.classId,
-                                    schoolClassName: widget.className,
-                                    totalStudent: widget.totalStudent,
-                                    dateTime: date,
-                                  ),
-                                ),
+                                AppRoutes.attendanceResultPage,
+                                arguments: {
+                                  "schoolClassId": widget.classId,
+                                  "schoolClassName": widget.className,
+                                  "totalStudent": widget.totalStudent,
+                                  "date": date,
+                                },
                               );
                             },
                           );

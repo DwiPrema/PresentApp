@@ -1,5 +1,7 @@
 import 'package:absensi_kelas/core/constant/app_colors.dart';
 import 'package:absensi_kelas/core/database/global_service.dart';
+import 'package:absensi_kelas/core/routes/router.dart';
+import 'package:absensi_kelas/core/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:absensi_kelas/features/home/ui/home.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,6 +29,8 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       home: const HomePage(),
+      initialRoute: AppRoutes.home,
+      onGenerateRoute: AppRouter.generate,
     );
   }
 }
