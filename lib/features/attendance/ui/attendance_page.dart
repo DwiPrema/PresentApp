@@ -7,6 +7,7 @@ import 'package:absensi_kelas/features/attendance/providers/attendance_ui_state.
 import 'package:absensi_kelas/features/attendance/ui/attendance_result_page.dart';
 import 'package:absensi_kelas/features/attendance/widget/box_absen.dart';
 import 'package:absensi_kelas/features/students/providers/student_provider.dart';
+import 'package:absensi_kelas/widgets/box.dart';
 import 'package:absensi_kelas/widgets/button.dart';
 import 'package:absensi_kelas/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
@@ -126,10 +127,23 @@ class _AttendancePageState extends ConsumerState<AttendancePage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                _topBox("Jumlah", "$totalStudents siswa",
-                                    heightHeader),
+                                BoxInfo(
+                                  label: "Jumlah",
+                                  value: "$totalStudents siswa",
+                                  color: AppColors.yellow,
+                                  heightHeader: heightHeader,
+                                  width: 100,
+                                  height: 80,
+                                ),
                                 const SizedBox(width: 10),
-                                _topBox(day, date, heightHeader),
+                                BoxInfo(
+                                  label: day,
+                                  value: date,
+                                  color: AppColors.yellow,
+                                  heightHeader: heightHeader,
+                                  width: 100,
+                                  height: 80,
+                                ),
                               ],
                             );
                           },
@@ -281,35 +295,6 @@ class _AttendancePageState extends ConsumerState<AttendancePage> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _topBox(String title, String value, double heightHeader) {
-    return Container(
-      width: 100,
-      height: 80,
-      margin: EdgeInsets.only(top: heightHeader - 40),
-      decoration: BoxDecoration(
-        color: AppColors.yellow,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          textPoppins(
-            title,
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
-            color: AppColors.white,
-          ),
-          textPoppins(
-            value,
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-            color: AppColors.white,
-          ),
-        ],
       ),
     );
   }

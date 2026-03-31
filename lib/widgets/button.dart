@@ -12,7 +12,6 @@ class Button extends StatelessWidget {
   final double paddingVertical;
   final double paddingHorizontal;
 
-  /// A customizable button widget.
   const Button({
     super.key,
     required this.text,
@@ -23,7 +22,7 @@ class Button extends StatelessWidget {
     required this.borderRadius,
     required this.onPressed,
     this.paddingVertical = 8,
-    this.paddingHorizontal = 16
+    this.paddingHorizontal = 16,
   });
 
   @override

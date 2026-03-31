@@ -5,6 +5,7 @@ import 'package:absensi_kelas/core/utils/date_helper.dart';
 import 'package:absensi_kelas/features/attendance/providers/attendance_provider.dart';
 import 'package:absensi_kelas/features/attendance/widget/box_absen.dart';
 import 'package:absensi_kelas/features/students/providers/student_provider.dart';
+import 'package:absensi_kelas/widgets/box.dart';
 import 'package:absensi_kelas/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -119,7 +120,11 @@ class ResultAttendancePage extends ConsumerWidget {
                         Expanded(
                           child: Column(
                             children: [
-                              _infoBox("Kelas", schoolClassName),
+                              BoxInfo(
+                                label: "Kelas",
+                                value: schoolClassName,
+                                color: AppColors.yellow,
+                              ),
                               const SizedBox(height: 10),
                               attendanceState.when(
                                   data: (attendance) {
@@ -127,12 +132,15 @@ class ResultAttendancePage extends ConsumerWidget {
                                         attendance?.details ?? [];
                                     final totalHadirHariIni =
                                         attendanceDetails.length;
-
-                                    return _infoBox(
-                                        "Total", totalHadirHariIni.toString());
+                                        
+                                    return BoxInfo(
+                                      label: "Total",
+                                      value: totalHadirHariIni.toString(),
+                                      color: AppColors.yellow,
+                                    );
                                   },
                                   error: (e, s) =>
-                                      _infoBox("Jumlah Siswa", "0"),
+                                      const BoxInfo(label: "Jumlah Siswa", value: "0", color: AppColors.yellow),
                                   loading: () => const Center(
                                         child: CircularProgressIndicator(),
                                       )),
@@ -155,26 +163,10 @@ class ResultAttendancePage extends ConsumerWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Row(
                           children: [
-                            _statusBox(
-                              "Hadir",
-                              hadir.toString(),
-                              AppColors.greenHadir,
-                            ),
-                            _statusBox(
-                              "Izin",
-                              izin.toString(),
-                              AppColors.blueIzin,
-                            ),
-                            _statusBox(
-                              "Sakit",
-                              sakit.toString(),
-                              AppColors.yellow,
-                            ),
-                            _statusBox(
-                              "Alpha",
-                              alpha.toString(),
-                              AppColors.redAlpha,
-                            ),
+                            Expanded(child: BoxInfo(label: "Hadir", value: hadir.toString(), color: AppColors.greenHadir)),
+                            Expanded(child: BoxInfo(label: "Izin", value: izin.toString(), color: AppColors.blueIzin)),
+                            Expanded(child: BoxInfo(label: "Sakit", value: sakit.toString(), color: AppColors.yellow)),
+                            Expanded(child: BoxInfo(label: "Alpha", value: alpha.toString(), color: AppColors.redAlpha)),
                           ],
                         ),
                       );
@@ -203,26 +195,22 @@ class ResultAttendancePage extends ConsumerWidget {
                       .sortByRollNum();
 
                   return SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final student = filteredStudent[index];
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      final student = filteredStudent[index];
 
-                        final status = attendanceMap[student.studentId] ??
-                            StatusKehadiran.alpha;
+                      final status = attendanceMap[student.studentId] ??
+                          StatusKehadiran.alpha;
 
-                        return BoxAbsen(
-                          nama: student.name,
-                          no: student.rollNum,
-                          mainColor: AppColors.black,
-                          nis: student.nis,
-                          nisn: student.nisn,
-                          status: status,
-                          isResultPage: true,
-                        );
-                      },
-
-                      childCount: filteredStudent.length
-                    ),
+                      return BoxAbsen(
+                        nama: student.name,
+                        no: student.rollNum,
+                        mainColor: AppColors.black,
+                        nis: student.nis,
+                        nisn: student.nisn,
+                        status: status,
+                        isResultPage: true,
+                      );
+                    }, childCount: filteredStudent.length),
                   );
                 },
                 loading: () => const SliverToBoxAdapter(
@@ -245,57 +233,6 @@ class ResultAttendancePage extends ConsumerWidget {
                     textPoppins("Data Absensi Error", color: AppColors.black)),
           ),
         ],
-      ),
-    );
-  }
-
-  static Widget _infoBox(String title, String value) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: Colors.orange,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            textPoppins(title,
-                color: AppColors.white,
-                fontSize: 12,
-                fontWeight: FontWeight.w500),
-            textPoppins(value,
-                color: AppColors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w700),
-          ],
-        ),
-      ),
-    );
-  }
-
-  static Widget _statusBox(String title, String value, Color color) {
-    return Expanded(
-      child: Container(
-        height: 70,
-        margin: const EdgeInsets.symmetric(horizontal: 4),
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            textPoppins(title,
-                color: AppColors.white,
-                fontSize: 12,
-                fontWeight: FontWeight.w500),
-            textPoppins(value,
-                color: AppColors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w700),
-          ],
-        ),
       ),
     );
   }

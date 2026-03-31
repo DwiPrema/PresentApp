@@ -1,6 +1,7 @@
 import 'package:absensi_kelas/core/constant/app_colors.dart';
 import 'package:absensi_kelas/core/enums/enum.dart';
 import 'package:absensi_kelas/core/extensions/student_extension.dart';
+import 'package:absensi_kelas/features/attendance/widget/card_recap.dart';
 import 'package:absensi_kelas/features/students/models/student_model.dart';
 import 'package:absensi_kelas/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
@@ -29,48 +30,6 @@ class MonthlyStudentRecap extends StatelessWidget {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          // SliverAppBar(
-          //   expandedHeight: 160,
-          //   pinned: true,
-          //   backgroundColor: mainColor,
-          //   flexibleSpace: FlexibleSpaceBar(
-          //     centerTitle: false,
-          //     titlePadding: const EdgeInsets.all(16),
-          //     title: Padding(
-          //       padding: const EdgeInsets.only(left: 16, bottom: 50),
-          //       child: Align(
-          //         alignment: Alignment.bottomRight,
-          //         child: Column(
-          //           mainAxisSize: MainAxisSize.min,
-          //           crossAxisAlignment: CrossAxisAlignment.start,
-          //           children: [
-          //             Text(
-          //               className,
-          //               style: const TextStyle(
-          //                 fontSize: 18,
-          //                 fontWeight: FontWeight.bold,
-          //                 color: Colors.white,
-          //               ),
-          //             ),
-          //             Text(
-          //               month,
-          //               style: const TextStyle(
-          //                 fontSize: 14,
-          //                 color: Colors.white70,
-          //               ),
-          //             ),
-          //           ],
-          //         ),
-          //       ),
-          //     ),
-          //     background: Align(
-          //       alignment: Alignment.bottomRight,
-          //       child: textPagratiNarrow("Rekap Absen",
-          //           color: AppColors.white, fontSize: 24),
-          //     ),
-          //   ),
-          // ),
-
           SliverAppBar(
             expandedHeight: 120,
             pinned: true,
@@ -147,7 +106,7 @@ class MonthlyStudentRecap extends StatelessWidget {
             ),
           ),
           SliverPadding(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
             sliver: SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
@@ -160,44 +119,16 @@ class MonthlyStudentRecap extends StatelessWidget {
                         StatusKehadiran.alpha: 0,
                       };
 
-                  return Card(
-                    margin: const EdgeInsets.symmetric(vertical: 6),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: ListTile(
-                      title: Text(
-                        student.name,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            _StatusItem(
-                              label: "Hadir",
-                              total: data[StatusKehadiran.hadir]!.toString(),
-                              color: AppColors.greenHadir,
-                            ),
-                            _StatusItem(
-                              label: "Izin",
-                              total: data[StatusKehadiran.izin]!.toString(),
-                              color: AppColors.blueIzin,
-                            ),
-                            _StatusItem(
-                              label: "Sakit",
-                              total: data[StatusKehadiran.sakit]!.toString(),
-                              color: AppColors.yellow,
-                            ),
-                            _StatusItem(
-                              label: "Alpha",
-                              total: data[StatusKehadiran.alpha]!.toString(),
-                              color: AppColors.redAlpha,
-                            ),
-                          ],
-                        ),
-                      ),
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: AttendanceMainCard(
+                      studentName: student.name,
+                      rollNum: student.rollNum,
+                      hadir: data[StatusKehadiran.hadir].toString(),
+                      izin: data[StatusKehadiran.izin].toString(),
+                      sakit: data[StatusKehadiran.sakit].toString(),
+                      alpha: data[StatusKehadiran.alpha].toString(),
+                      mainColor: mainColor,
                     ),
                   );
                 },
@@ -207,41 +138,6 @@ class MonthlyStudentRecap extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _StatusItem extends StatelessWidget {
-  final String label;
-  final String total;
-  final Color color;
-
-  const _StatusItem({
-    required this.label,
-    required this.total,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          total,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-            color: color,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.grey[600],
-          ),
-        ),
-      ],
     );
   }
 }
