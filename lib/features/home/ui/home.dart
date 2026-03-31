@@ -252,7 +252,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     children: [
                       textPagratiNarrow("Pilih Kelas",
                           color: AppColors.black,
-                          fontSize: 32,
+                          fontSize: 24,
                           fontWeight: FontWeight.w700),
                       Button(
                         text: "+ Tambah Kelas",

@@ -4,6 +4,7 @@ import 'package:absensi_kelas/core/extensions/attendance_extension.dart';
 import 'package:absensi_kelas/features/attendance/providers/attendance_provider.dart';
 import 'package:absensi_kelas/features/attendance/ui/attendance_recap.dart';
 import 'package:absensi_kelas/features/attendance/ui/attendance_result_page.dart';
+import 'package:absensi_kelas/features/attendance/widget/card_recap.dart';
 import 'package:absensi_kelas/features/students/providers/student_provider.dart';
 import 'package:absensi_kelas/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
@@ -79,20 +80,23 @@ class _AttendanceHistoryPageState extends ConsumerState<AttendanceHistoryPage> {
               centerTitle: false,
               titlePadding: const EdgeInsets.all(8),
               title: Align(
-                alignment: Alignment.bottomRight,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                  textPoppins(
-                  widget.className,
-                  color: AppColors.white,
-                  fontSize: 14,
-                  textAlign: TextAlign.right,
-                ),
-                textPoppins(monthName, color: AppColors.white, fontSize: 8, textAlign: TextAlign.right)
-                ],)
-              ),
+                  alignment: Alignment.bottomRight,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      textPoppins(
+                        widget.className,
+                        color: AppColors.white,
+                        fontSize: 14,
+                        textAlign: TextAlign.right,
+                      ),
+                      textPoppins(monthName,
+                          color: AppColors.white,
+                          fontSize: 8,
+                          textAlign: TextAlign.right)
+                    ],
+                  )),
               background: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -266,7 +270,7 @@ class _AttendanceHistoryPageState extends ConsumerState<AttendanceHistoryPage> {
                           final sakit = data[StatusKehadiran.sakit] ?? 0;
                           final alpha = data[StatusKehadiran.alpha] ?? 0;
 
-                          return _attendanceCard(
+                          return AttendanceMainCard(
                             date: date,
                             hadir: hadir.toString(),
                             izin: izin.toString(),
@@ -318,124 +322,6 @@ class _AttendanceHistoryPageState extends ConsumerState<AttendanceHistoryPage> {
           )
         ],
       ),
-    );
-  }
-
-  String formatDate(DateTime date) {
-    return "${date.day}/${date.month}/${date.year}";
-  }
-
-  Widget _attendanceCard({
-    required DateTime date,
-    required String hadir,
-    required String izin,
-    required String sakit,
-    required String alpha,
-    required VoidCallback navigateToDetail,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.black.withOpacity(0.2),
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  const Icon(Icons.calendar_today, size: 18),
-                  const SizedBox(width: 8),
-                  textPoppins(formatDate(date),
-                      color: AppColors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600)
-                ],
-              ),
-              GestureDetector(
-                onTap: navigateToDetail,
-                child: const Icon(
-                  Icons.arrow_circle_right_outlined,
-                  size: 24,
-                  color: AppColors.black,
-                ),
-              )
-            ],
-          ),
-          const SizedBox(height: 24),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _StatusItem(
-                label: "Hadir",
-                total: hadir,
-                color: AppColors.greenHadir,
-              ),
-              _StatusItem(
-                label: "Izin",
-                total: izin,
-                color: AppColors.blueIzin,
-              ),
-              _StatusItem(
-                label: "Sakit",
-                total: sakit,
-                color: AppColors.yellow,
-              ),
-              _StatusItem(
-                label: "Alpha",
-                total: alpha,
-                color: AppColors.redAlpha,
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _StatusItem extends StatelessWidget {
-  final String label;
-  final String total;
-  final Color color;
-
-  const _StatusItem({
-    required this.label,
-    required this.total,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          total.toString(),
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-            color: color,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.grey[600],
-          ),
-        ),
-      ],
     );
   }
 }
