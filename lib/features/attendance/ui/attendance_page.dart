@@ -1,10 +1,10 @@
 import 'package:absensi_kelas/core/enums/enum.dart';
 import 'package:absensi_kelas/core/extensions/student_extension.dart';
+import 'package:absensi_kelas/core/routes/routes.dart';
 import 'package:absensi_kelas/core/utils/date_helper.dart';
 import 'package:absensi_kelas/features/attendance/models/attendance_model.dart';
 import 'package:absensi_kelas/features/attendance/providers/attendance_provider.dart';
 import 'package:absensi_kelas/features/attendance/providers/attendance_ui_state.dart';
-import 'package:absensi_kelas/features/attendance/ui/attendance_result_page.dart';
 import 'package:absensi_kelas/features/attendance/widget/box_absen.dart';
 import 'package:absensi_kelas/features/students/providers/student_provider.dart';
 import 'package:absensi_kelas/widgets/box.dart';
@@ -276,15 +276,14 @@ class _AttendancePageState extends ConsumerState<AttendancePage> {
 
                           if (!context.mounted) return;
 
-                          Navigator.push(
+                          Navigator.pushNamed(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => ResultAttendancePage(
-                                schoolClassId: widget.schoolClassId,
-                                schoolClassName: widget.schoolClassName,
-                                totalStudent: detail.length.toString(),
-                              ),
-                            ),
+                            AppRoutes.attendanceResultPage,
+                            arguments: {
+                              "schoolClassId": widget.schoolClassId,
+                              "schoolClassName": widget.schoolClassName,
+                              "totalStudent": detail.length.toString(),
+                            },
                           );
                         }),
                   ),
@@ -347,15 +346,15 @@ void _isExistAttendance({
             onPressed: () {
               Navigator.pop(dialogContext);
 
-              Navigator.push(
+              Navigator.pushNamed(
                 buildContext,
-                MaterialPageRoute(
-                  builder: (_) => ResultAttendancePage(
-                    schoolClassId: schClassId,
-                    schoolClassName: schClassName,
-                    totalStudent: totalStudent,
-                  ),
-                ),
+                AppRoutes.attendanceResultPage,
+                arguments: {
+                  "schoolClassId": schClassId,
+                  "schoolClassName": schClassName,
+                  "totalStudent": totalStudent,
+                  "date": DateHelper.todayOnly(),
+                },
               );
             },
           ),
