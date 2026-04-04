@@ -1,63 +1,62 @@
-# 📚 Absensi Kelas App
+# 📚 Classroom Attendance App
 
-Aplikasi **Absensi Kelas** berbasis **Flutter** dan **Isar Database** untuk membantu pencatatan kehadiran siswa secara **cepat, ringan, dan efisien**.
+A **Classroom Attendance** application built with **Flutter** and **Isar Database** to help record student attendance in a **fast, lightweight, and efficient** way.
 
-Project ini merupakan **rilis awal yang stabil**, dengan fokus pada implementasi fitur inti absensi yang sederhana namun powerful.
+This project is an **initial stable release**, focusing on implementing simple yet powerful core attendance features.
 
 ---
 
 ## ✨ Preview
 
-> 📸 Screenshot dan 🎥 video demo akan ditambahkan di sini
+> 📸 Screenshots and 🎥 demo videos will be added here
 
 ---
 
 ## 🚀 Tech Stack
 
-| Teknologi | Deskripsi                        |
-| --------- | -------------------------------- |
-| Flutter   | Framework UI cross-platform      |
-| Riverpod  | State management modern          |
-| Isar      | Local NoSQL database super cepat |
-| Dart      | Bahasa pemrograman utama         |
+| Technology | Description                     |
+| ---------- | ------------------------------- |
+| Flutter    | Cross-platform UI framework     |
+| Riverpod   | Modern state management         |
+| Isar       | Super fast local NoSQL database |
+| Dart       | Main programming language       |
 
 ---
 
-## 🎯 Fitur Utama
+## 🎯 Main Features
 
-* ✅ Input absensi siswa per kelas
-* ✅ Riwayat absensi harian
-* ✅ Rekap absensi bulanan per siswa
-* ✅ Sorting berdasarkan nomor absen
-* ✅ UI modern menggunakan Sliver
-* 🚧 (Coming Soon) Export rekap absensi
+* ✅ Student attendance input per class
+* ✅ Daily attendance history
+* ✅ Monthly attendance recap per student
+* ✅ Sorting based on attendance number
+* ✅ Modern UI using Sliver
 
 ---
 
-## 📌 Mengapa Menggunakan Flutter 3.16.9?
+## 📌 Why Use Flutter 3.16.9?
 
-Project ini menggunakan versi ini untuk menjaga stabilitas pengembangan:
+This project uses this version to maintain development stability:
 
-* ✅ Kompatibel dengan **Isar 3.x**
-* ✅ Menghindari masalah Android Gradle Plugin (AGP)
-* ✅ Menghindari breaking changes pada versi terbaru
-* ✅ Lebih stabil untuk pengembangan jangka panjang
+* ✅ Compatible with **Isar 3.x**
+* ✅ Avoids Android Gradle Plugin (AGP) issues
+* ✅ Avoids breaking changes in newer versions
+* ✅ More stable for long-term development
 
-> ⚠️ Isar belum sepenuhnya kompatibel dengan Flutter versi terbaru saat project ini dibuat.
+> ⚠️ Isar is not fully compatible with the latest Flutter versions at the time this project was created.
 
 ---
 
 ## 🔧 Flutter Version Management (FVM)
 
-Project ini menggunakan **FVM (Flutter Version Management)** untuk memastikan konsistensi versi Flutter.
+This project uses **FVM (Flutter Version Management)** to ensure Flutter version consistency.
 
-### 📌 Versi yang Dibutuhkan
+### 📌 Required Version
 
 ```
 Flutter 3.16.9
 ```
 
-Versi ini dikunci pada file:
+This version is locked in the file:
 
 ```
 .fvmrc
@@ -65,9 +64,9 @@ Versi ini dikunci pada file:
 
 ---
 
-## ⚙️ Instalasi FVM
+## ⚙️ Install FVM
 
-Jika belum memiliki FVM:
+If you don’t have FVM yet:
 
 ```bash
 dart pub global activate fvm
@@ -75,7 +74,7 @@ dart pub global activate fvm
 
 ---
 
-## 📦 Setup Project
+## 📦 Project Setup
 
 ```bash
 fvm install
@@ -85,7 +84,7 @@ fvm flutter pub get
 
 ---
 
-## ▶️ Menjalankan Aplikasi
+## ▶️ Run the App
 
 ```bash
 fvm flutter run
@@ -93,7 +92,7 @@ fvm flutter run
 
 ---
 
-## 📁 Struktur Project (Simplified)
+## 📁 Project Structure (Simplified)
 
 ```
 lib/
@@ -117,28 +116,44 @@ lib/
 
 ---
 
-## 🎯 Tujuan Project
+## 🎯 Project Goals
 
-Project ini dibuat untuk:
+This project was created for:
 
-* 📚 Tugas Sekolah & Media pembelajaran Flutter & Riverpod
-* 🧠 Implementasi database lokal menggunakan Isar
-* 💼 Portofolio pengembangan aplikasi mobile
-* 🚀 Memudahkan perangkat kelas / guru disekolah untuk mengabsen & merekap siswa
-
----
-
-## ⭐ Dukungan
-
-Jika project ini membantu, jangan lupa:
-
-* ⭐ Star repository
-* 🍴 Fork project
-* 🧠 Berikan feedback
+* 📚 School assignment & learning media for Flutter & Riverpod
+* 🧠 Implementation of a local database using Isar
+* 💼 Mobile app development portfolio
+* 🚀 Helping classroom devices / teachers in schools to record and recap student attendance
 
 ---
 
-## 🔥 Future Improvements
+## 📦 Download & Release
 
-* 📊 Statistik kehadiran (chart)
-* 📤 Export data rekap absen ke PDF / Excel
+This application has reached a stable stage for its core features. You can try the app directly by downloading the APK file on the **Releases** page.
+
+### **Latest Version: [v1.0.0 - Initial Release](https://www.google.com/search?q=https://github.com/DwiPrema/absensi_kelas/releases/tag/v1.0.0)**
+
+> **Note:** Choose the APK file that matches your device architecture (recommended **arm64-v8a** for modern smartphones).
+
+---
+
+## 🚀 Future Improvements (Roadmap to v2.0.0)
+
+The development plan for the next version will focus on efficiency and smart technologies:
+
+* 🤖 **AI Assistant Integration:** Implementation of an intelligent assistant (Gemini API) for automatic recap and student attendance data analysis.
+* 🛠️ **Database Refactor:** Optimization of the database schema structure for better performance and scalability.
+* 📊 **Enhanced Analytics:** Visualization of attendance statistics in interactive charts/graphs.
+* 📤 **Export Data:** Feature to export attendance reports to PDF or Excel format.
+
+---
+
+## ⭐ Support
+
+If this project helps you, don’t forget to:
+
+* ⭐ **Star** this repository
+* 🍴 **Fork** the project for further development
+* 💬 Give feedback or suggestions through **Issues**
+
+---
