@@ -43,6 +43,7 @@ dependencies:
   share_plus: ^13.1.0
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.14.4
   build_runner: ^2.13.1
   drift_dev: ^2.32.1
   flutter_lints: ^6.0.0
@@ -85,3 +86,8 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+flutter_launcher_icons :
+  android : true
+  ios: true
+  image_path: assets/app_icon/PresentApp.png
